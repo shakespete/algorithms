@@ -1,26 +1,31 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 
-void insertion_sort(int* A, int N) {
-    for (int j = 1; j < N; ++j) {
-        int key = A[j];
-        int i = j - 1;
-        while (i >= 0 && A[i] > key) {
-            A[i+1] = A[i];
-            --i;
+void swap(int x, int y, int* A) {
+    int temp = A[x];
+    A[x] = A[y];
+    A[y] = temp;
+}
+
+void selection_sort(int N, int* A) {
+    for (int i = 0; i < N - 1; ++i) {
+        int minPtr = i;
+        for (int j = i + 1; j < N; ++j) {
+            if (A[j] < A[minPtr]) minPtr = j;
         }
-        A[i+1] = key;
+        swap(minPtr, i, A);
     }
 }
 
 int main() {
-    int arr[] = { 2,4,5,7,1,0,9,8,3,6 };
-    int size = sizeof(arr) / sizeof(arr)[0];
-
-    for (int i = 0; i < size; ++i) printf("%d ", arr[i]);
+    int num[] = {3, 1, 6, 8, 2, 4, 9, 0, 5, 7};
+    int N = sizeof(num) / sizeof(num)[0];
+    
+    for (int i = 0; i < N; ++i) printf("%d ", num[i]);
+    selection_sort(N, num);
     printf("\n");
-    insertion_sort(arr, size);
-    for (int i = 0; i < size; ++i) printf("%d ", arr[i]);
+    for (int i = 0; i < N; ++i) printf("%d ", num[i]);
+    
     printf("\nFIN\n");
     return 0;
 }
