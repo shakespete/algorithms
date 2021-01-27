@@ -1,51 +1,29 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 
-#define MAX_N 100
-
-void merge(int p, int q, int r, int* A) {
-    int i, j, k;
-    int n1 = q - p + 1;
-    int n2 = r - q;
-    
-    int* L = new int[n1 + 1];
-    int* R = new int[n2 + 1];
-    
-    for (i = 1; i <= n1; ++i) L[i] = A[i + p - 1];
-    for (j = 1; j <= n2; ++j) R[j] = A[j + q];
-    
-    L[n1 + 1] = MAX_N;
-    R[n2 + 1] = MAX_N;
-    
-    i = j = 1;
-    for (k = p; k <= r; ++k) {
-        if (L[i] <= R[j]) {
-            A[k] = L[i];
-            ++i;
-        } else {
-            A[k] = R[j];
-            ++j;
-        }
-    }
+void swap(int a, int b, int* A) {
+    int temp = A[a];
+    A[a] = A[b];
+    A[b] = temp;
 }
 
-void merge_sort(int* A, int p, int r) {
-    if (p < r) {
-        int q = (p + r) / 2;
-        merge_sort(A, p, q);
-        merge_sort(A, q + 1, r);
-        merge(p, q, r, A);
+void selection_sort(int N, int* A) {
+    for (int i = 0; i < N - 1; ++i) {
+        int minPtr = i;
+        for (int j = i + 1; j < N; ++j)
+            if (A[j] < A[minPtr]) minPtr = j;
+        swap(minPtr, i, A);
     }
 }
 
 int main() {
-    int arr[] = { 9,0,4,5,7,1,2,8,3,6 };
-    int size = sizeof(arr) / sizeof(arr)[0];
+    int num[] = {8, 3, 1, 6, 2, 4, 9, 0, 5, 7};
+    int N = sizeof(num) / sizeof(num)[0];
     
-    for (int i = 0; i < size; ++i) printf("%d ", arr[i]);
+    for (int i = 0; i < N; ++i) printf("%d ", num[i]);
+    selection_sort(N, num);
     printf("\n");
-    merge_sort(arr, 0, size - 1);
-    for (int i = 0; i < size; ++i) printf("%d ", arr[i]);
+    for (int i = 0; i < N; ++i) printf("%d ", num[i]);
     printf("\nFIN\n");
     return 0;
 }
