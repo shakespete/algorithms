@@ -7,22 +7,16 @@ void swap(int x, int y, int* A) {
     A[y] = temp;
 }
 
-int partition(int start, int end, int* A) {
-    int pivot = A[end];
-    int x = start - 1;
-    for (int i = start; i <= end; ++i)
-        if (A[i] < pivot)
-            swap(++x, i, A);
-    swap(++x, end, A);
-    return x;
-}
-    
-void quick_sort(int start, int end, int* A) {
-    if (start < end) {
-        int p = partition(start, end, A);
-        quick_sort(start, p - 1, A);
-        quick_sort(p + 1, end, A);
-    }
+void insertion_sort(int* A, int N) {
+    for (int j = 1; j < N; ++j) {
+        int key = A[j];
+        int i = j - 1;
+        while (i >= 0 && A[i] > key) {
+            A[i + 1] = A[i];
+            --i;
+        }
+        A[i + 1] = key;
+     }
 }
 
 int main() {
@@ -30,7 +24,7 @@ int main() {
     int N = sizeof(num) / sizeof(num)[0];
     
     for (int i = 0; i < N; ++i) printf("%d ", num[i]);
-    quick_sort(0, N - 1, num);
+    insertion_sort(num, N);
     printf("\n");
     for (int i = 0; i < N; ++i) printf("%d ", num[i]);
     printf("\nFIN\n");
