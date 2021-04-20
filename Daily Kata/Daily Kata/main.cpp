@@ -1,15 +1,18 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 
+void swap(int x, int y, int* A) {
+    int temp = A[x];
+    A[x] = A[y];
+    A[y] = temp;
+}
+
 void selection_sort(int N, int* A) {
-    for(int j = 1; j < N; ++j) {
-        int key = A[j];
-        int i = j - 1;
-        while (i >= 0 && A[i] > key) {
-            A[i + 1] = A[i];
-            --i;
-        }
-        A[i + 1] = key;
+    for (int i = 0; i < N; ++i) {
+        int minPtr = i;
+        for (int j = i + 1; j < N; ++j)
+            if (A[j] < A[minPtr]) minPtr = j;
+        swap(minPtr, i, A);
     }
 }
 
