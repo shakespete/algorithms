@@ -7,13 +7,11 @@ void swap(int x, int y, int* A) {
     A[y] = temp;
 }
 
-void selection_sort(int N, int* A) {
-    for (int i = 0; i < N; ++i) {
-        int minPtr = i;
-        for (int j = i + 1; j < N; ++j)
-            if (A[j] < A[minPtr]) minPtr = j;
-        swap(minPtr, i, A);
-    }
+void bubble_sort(int N, int* A) {
+    for (int i = 1; i < N; ++i)
+        for (int j = 0; j < N - i; ++j)
+            if (A[j] > A[j +1])
+                swap(j, j + 1, A);
 }
 
 int main() {
@@ -21,7 +19,7 @@ int main() {
     int N = sizeof(num) / sizeof(num)[0];
 
     for (int i = 0; i < N; ++i) printf("%d ", num[i]);
-    selection_sort(N, num);
+    bubble_sort(N, num);
     printf("\n");
     for (int i = 0; i < N; ++i) printf("%d ", num[i]);
     printf("\nFIN\n");
