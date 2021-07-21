@@ -2,10 +2,10 @@
 #include <stdio.h>
 
 // Simple Queue
-class Q {
-    enum { DEF_CAP = 10 };
+class Queue {
+    enum { DEF_CAP = 2 };
 public:
-    Q(int cap = DEF_CAP);
+    Queue(int cap = DEF_CAP);
     bool empty();
     void enq(int e);
     int deq();
@@ -16,9 +16,9 @@ private:
     int rear;
 };
 
-Q::Q(int cap) : front(0), rear(0), capacity(cap), q(new int[cap]) {};
-bool Q::empty() { return front == rear; }
-void Q::enq(int e) {
+Queue::Queue(int cap) : front(0), rear(0), capacity(cap), q(new int[cap]) {};
+bool Queue::empty() { return front == rear; }
+void Queue::enq(int e) {
     if (rear == capacity) {
         int* temp = new int[capacity * 2];
         for (int i = 0; i < capacity; ++i) temp[i] = q[i];
@@ -28,7 +28,7 @@ void Q::enq(int e) {
     q[rear] = e;
     rear++;
 }
-int Q::deq() {
+int Queue::deq() {
     if (!empty()) return q[front++];
     return -1;
 }
@@ -41,23 +41,27 @@ public:
     void addEdge(int v, int w);
     void BFS(int s);
 private:
-    int V;
-    int** adjList;
+    int V;          // Number of vertices
+    int** adjList;  // Adjacency list
 };
-
 
 Graph::Graph(int e) {
     V = e;
     adjList = new int*[e];
-    for (int i = 0; i < e; ++i) adjList[i] = new int[e]();
+    for (int i = 0; i < e; ++i)
+        adjList[i] = new int[e]();
 }
 void Graph::addEdge(int v, int w) { adjList[v][w] = 1; }
 void Graph::BFS(int s) {
-    for (int i = 0; i < 10; ++i) {
-        for (int j = 0; j < 10; ++j) {
-            printf("%d ", adjList[i][j]);
-        }
-        printf("\n");
+    Queue* q = new Queue();
+    
+    q->enq(s);
+    while (!q->empty()) {
+        int u = q->deq();
+        printf("%d ", u);
+        for (int i = 0; i < V; ++i)
+            if (adjList[u][i] == 1)
+                q->enq(i);
     }
 }
 
@@ -65,22 +69,26 @@ int main() {
     Graph* g = new Graph(10);
     g->addEdge(1, 2);
     g->addEdge(1, 3);
+    g->addEdge(1, 5);
     g->addEdge(3, 4);
+    g->addEdge(4, 7);
+    g->addEdge(5, 6);
+    g->addEdge(6, 8);
+    g->addEdge(6, 9);
+    g->addEdge(2, 0);
     g->BFS(1);
     
     printf("\n");
-    
-    Q* q = new Q();
-    q->enq(1);
-    q->enq(2);
-    q->enq(3);
-    q->enq(4);
-    q->enq(5);
-    
-    while (!q->empty()) {
-        printf("%d ", q->deq());
-    }
-    printf("\n");
-    
     return 0;
 }
+
+/*
+       1
+    /  |  \
+   2   3   5
+   |   |   |
+   0   4   6
+       |  / \
+       7 8   9
+ 
+ */
