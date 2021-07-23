@@ -25,14 +25,12 @@ void Queue::enq(int e) {
         q = temp;
         capacity *= 2;
     }
-    q[rear] = e;
-    rear++;
+    q[rear++] = e;
 }
 int Queue::deq() {
     if (!empty()) return q[front++];
     return -1;
 }
-
 
 // Graph (BFS)
 class Graph {
@@ -43,25 +41,31 @@ public:
 private:
     int V;          // Number of vertices
     int** adjList;  // Adjacency list
+    int* visited;
 };
 
 Graph::Graph(int e) {
     V = e;
     adjList = new int*[e];
+    visited = new int[e];
     for (int i = 0; i < e; ++i)
-        adjList[i] = new int[e]();
+        adjList[i] = new int[e]{0};
 }
-void Graph::addEdge(int v, int w) { adjList[v][w] = 1; }
+void Graph::addEdge(int v, int w) {
+    adjList[v][w] = 1;
+    adjList[w][v] = 1;
+}
 void Graph::BFS(int s) {
     Queue* q = new Queue();
-    
     q->enq(s);
+    
     while (!q->empty()) {
         int u = q->deq();
+        visited[u] = 1;
         printf("%d ", u);
         for (int i = 0; i < V; ++i)
             if (adjList[u][i] == 1)
-                q->enq(i);
+                if (visited[i] != 1) q->enq(i);
     }
 }
 
@@ -77,6 +81,8 @@ int main() {
     g->addEdge(6, 9);
     g->addEdge(2, 0);
     g->BFS(1);
+//    g->BFS(7);
+//    g->BFS(9);
     
     printf("\n");
     return 0;
