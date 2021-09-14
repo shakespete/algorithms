@@ -7,30 +7,20 @@ void swap(int x, int y, int* A) {
     A[y] = temp;
 }
 
-int partition(int start, int end, int* A) {
-    int pivot = A[end];
-    int x = start - 1;
-    for (int i = start; i <= end; ++i)
-        if (A[i] < pivot)
-            swap(++x, i, A);
-    swap(++x, end, A);
-    return x;
+void bubble_sort(int N, int* A) {
+    for (int i = 1; i < N; ++i)
+        for (int j = 0; j < N - i; ++j)
+            if (A[j] > A[j + 1])
+                swap(j, j + 1, A);
 }
 
-void quick_sort(int start, int end, int* A) {
-    if (start < end) {
-        int p = partition(start, end, A);
-        quick_sort(start, p - 1, A);
-        quick_sort(p + 1, end, A);
-    }
-}
 
 int main() {
     int num[] = { 4, 1, 8, 9, 0, 3, 6, 2, 7, 5 };
     int N = sizeof(num) / sizeof(num)[0];
 
     for (int i = 0; i < N; ++i) printf("%d ", num[i]);
-    quick_sort(0, N - 1, num);
+    bubble_sort(N, num);
     printf("\n");
     for (int i = 0; i < N; ++i) printf("%d ", num[i]);
     printf("\nFIN\n");
