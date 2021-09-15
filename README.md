@@ -79,6 +79,82 @@ constant-time algorithm will be faster than a linear-time algorithm, which will 
 than a quadratic-time algorithm).
 </p>
 
+## How to Determine Complexities
+
+<p>
+In general, how can you determine the running time of a piece of code? The answer is
+that it depends on what kinds of statements are used.
+</p>
+
+### Sequence of statements
+
+statement 1;
+statement 2;
+...
+statement k;
+<p>
+The total time is found by adding the times for all statements:
+</p>
+
+**_total time = time(statement 1) + time(statement 2) + ... + time(statement k)_**
+
+<p>
+If each statement is "simple" (only involves basic operations) then the time for each
+statement is constant and the total time is also constant: O(1).
+</p>
+
+### If-Then-Else
+```
+if (cond) then
+  block 1 (sequence of statements)
+else
+  block 2 (sequence of statements)
+end if;
+```
+<p>
+Here, either block 1 will execute, or block 2 will execute. Therefore, the worst-case time
+is the slower of the two possibilities:
+</p>
+
+**_max(time(block 1), time(block 2))_**
+
+<p>If block 1 takes O(1) and block 2 takes O(N), the if-then-else statement would be O(N)</p>
+
+### Loops
+
+```
+for I in 1 .. N loop
+  sequence of statements
+end loop;
+```
+
+<p>
+The loop executes N times, so the sequence of statements also executes N times. If we
+assume the statements are O(1), the total time for the for loop is N * O(1), which is O(N)
+overall.
+</p>
+
+### Nested Loops
+
+```
+for I in 1 .. N loop
+  for J in 1 .. M loop
+    sequence of statements
+  end loop;
+end loop;
+```
+<p>
+The outer loop executes N times. Every time the outer loop executes, the inner loop
+executes M times. As a result, the statements in the inner loop execute a total of N * M
+times. Thus, the complexity is O(N * M).
+</p>
+<p>
+In a common special case where the stopping condition of the inner loop is J < N instead
+of J < M (i.e., the inner loop also executes N times), the total complexity for the two loops
+is O(N^2)
+</p>
+
+
 <p>
 Sources:
 </p>
