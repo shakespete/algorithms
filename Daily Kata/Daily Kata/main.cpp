@@ -6,15 +6,21 @@ using namespace std;
 
 #define MAX_N 100
 
-void insertionSort(int N, vector<int> &A) {
-    for (int j = 1; j < N; ++j) {
-        int key = A[j];
-        int i = j - 1;
-        while (i >= 0 && A[i] > key) {
-            A[i + 1] = A[i];
-            --i;
-        }
-        A[i + 1] = key;
+void swap(int x, int y, vector<int> &A) {
+    int temp = A[x];
+    A[x] = A[y];
+    A[y] = temp;
+}
+
+void selectionSort(vector<int> &A) {
+    int N = (int)A.size();
+    
+    for (int i = 0; i < N - 1; ++i) {
+        int minPtr = i;
+        for (int j = i + 1; j < N; ++j)
+            if (A[j] < A[minPtr]) minPtr = j;
+        
+        swap(minPtr, i, A);
     }
 }
 
@@ -23,7 +29,7 @@ int main() {
     auto N = arr.size();
 
     for (int i = 0; i < N; ++i) printf("%d ", arr[i]);
-    insertionSort(N, arr);
+    selectionSort(arr);
     printf("\n");
     for (int i = 0; i < N; ++i) printf("%d ", arr[i]);
     printf("\nFIN\n");
