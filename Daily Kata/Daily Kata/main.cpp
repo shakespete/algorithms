@@ -6,28 +6,39 @@ using namespace std;
 
 #define MAX_N 100
 
-void swap(int x, int y, vector<int> &A) {
-    int temp = A[x];
-    A[x] = A[y];
-    A[y] = temp;
-}
-
-int partition(int start, int end, vector<int> &arr) {
-    int pivot = arr[end];
-    int x = start - 1;
-    for (int i = start; i <= end; ++i)
-        if (arr[i] < pivot)
-            swap(++x, i, arr);
+void merge(int p, int q, int r, vector<int> &A) {
+    int i, j, k;
     
-    swap(++x, end, arr);
-    return x;
+    int n1 = q - p + 1;
+    int n2 = r - q;
+    
+    int *L = new int[n1 + 1];
+    int *R = new int[n2 + 1];
+    
+    for (i = 1; i <= n1; ++i) L[i] = A[i + p - 1];
+    for (j = 1; j <= n2; ++j) R[j] = A[j + q];
+    
+    L[n1 + 1] = MAX_N;
+    R[n2 + 1] = MAX_N;
+    
+    i = j = 1;
+    for (k = p; k <= r; ++k) {
+        if (L[i] < R[j]) {
+            A[k] = L[i];
+            ++i;
+        } else {
+            A[k] = R[j];
+            ++j;
+        }
+    }
 }
 
-void quickSort(int start, int end, vector<int> &arr) {
-    if (start < end) {
-        int p = partition(start, end, arr);
-        quickSort(start, p - 1, arr);
-        quickSort(p + 1, end, arr);
+void mergeSort(int p, int r, vector<int> &A) {
+    if (p < r) {
+        int q = (p + r) / 2;
+        mergeSort(p, q, A);
+        mergeSort(q + 1, r, A);
+        merge(p, q, r, A);
     }
 }
 
@@ -36,7 +47,7 @@ int main() {
     auto N = arr.size();
 
     for (int i = 0; i < N; ++i) printf("%d ", arr[i]);
-    quickSort(0, arr.size() - 1, arr);
+    mergeSort(0, arr.size() - 1, arr);
     printf("\n");
     for (int i = 0; i < N; ++i) printf("%d ", arr[i]);
     printf("\nFIN\n");
