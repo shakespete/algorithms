@@ -4,7 +4,7 @@
 <img src="https://github.com/shakespete/algorithms/blob/dev/img/big_o.png" align="center" >
 </p>
 <p align="center">
-<img src="https://github.com/shakespete/algorithms/blob/dev/img/algo_complexity.png" width="800px" height="auto" align="center" >
+<img src="https://github.com/shakespete/algorithms/blob/dev/img/sorting_complexity.png" width="800px" height="auto" align="center" >
 </p>
 
 Source: https://www.bigocheatsheet.com/
