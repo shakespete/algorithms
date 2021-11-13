@@ -4,35 +4,23 @@
 
 using namespace std;
 
-void maxHeapify(int i, vector<int> &arr, int heapSize) {
-    int l = 2 * i + 1;
-    int r = 2 * i + 2;
+// Time O(nlog(n)) / O(n^2) | Space O(log(n))
+int partition(int start, int end, vector<int> &arr) {
+    int pivot = arr[end];
+    int x = start - 1;
+    for (int i = start; i < end; ++i)
+        if (arr[i] < pivot)
+            swap(arr[++x], arr[i]);
     
-    int largest;
-    if (l < heapSize && arr[l] > arr[i]) largest = l;
-    else largest = i;
-    
-    if (r < heapSize && arr[r] > arr[largest]) largest = r;
-    
-    if (largest != i) {
-        swap(arr[largest], arr[i]);
-        maxHeapify(largest, arr, heapSize);
-    }
+    swap(arr[++x], arr[end]);
+    return x;
 }
 
-void buildMaxHeap(vector<int> &arr) {
-    int heapSize = (int)arr.size();
-    int parentIdx = heapSize / 2 - 1;
-    for (int i = parentIdx; i >= 0; --i) maxHeapify(i, arr, heapSize);
-}
-
-void heapSort(vector<int> &arr) {
-    buildMaxHeap(arr);
-    int heapSize = (int)arr.size();
-    for (int i = heapSize - 1; i > 0; --i) {
-        swap(arr[0], arr[i]);
-        heapSize--;
-        maxHeapify(0, arr, heapSize);
+void quickSort(int start, int end, vector<int> &arr) {
+    if (start < end) {
+        int p = partition(start, end, arr);
+        quickSort(start, p - 1, arr);
+        quickSort(p + 1, end, arr);
     }
 }
 
@@ -41,7 +29,7 @@ int main() {
     for (int i : arr) printf("%d ", i);
     printf("\n");
     
-    heapSort(arr);
+    quickSort(0, (int)arr.size() - 1, arr);
     for (int i : arr) printf("%d ", i);
     printf("\n");
     printf("FIN\n");
