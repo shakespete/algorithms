@@ -4,23 +4,36 @@
 
 using namespace std;
 
-// Time O(nlog(n)) / O(n^2) | Space O(log(n))
-int partition(int start, int end, vector<int> &arr) {
-    int pivot = arr[end];
-    int x = start - 1;
-    for (int i = start; i < end; ++i)
-        if (arr[i] < pivot)
-            swap(arr[++x], arr[i]);
+void maxHeapify(int i, int heapSize, vector<int> &array) {
+    int l = 2 * i + 1;
+    int r = 2 * i + 2;
     
-    swap(arr[++x], arr[end]);
-    return x;
+    int largest;
+    if (l < heapSize && array[l] > array[i]) largest = l;
+    else largest = i;
+    
+    if (r < heapSize && array[r] > array[largest]) largest = r;
+    
+    if (largest != i) {
+        swap(array[largest], array[i]);
+        maxHeapify(largest, heapSize, array);
+    }
 }
 
-void quickSort(int start, int end, vector<int> &arr) {
-    if (start < end) {
-        int p = partition(start, end, arr);
-        quickSort(start, p - 1, arr);
-        quickSort(p + 1, end, arr);
+void buildMaxHeap(vector<int> &array) {
+    int heapSize = (int)array.size();
+    int parentIdx = heapSize / 2 - 1;
+    for (int i = parentIdx; i >= 0; --i)
+        maxHeapify(i, heapSize, array);
+}
+
+void heapSort(vector<int> &array) {
+    buildMaxHeap(array);
+    int heapSize = (int)array.size();
+    for (int i = heapSize - 1; i > 0; --i) {
+        swap(array[0], array[i]);
+        heapSize--;
+        maxHeapify(0, heapSize, array);
     }
 }
 
@@ -29,7 +42,7 @@ int main() {
     for (int i : arr) printf("%d ", i);
     printf("\n");
     
-    quickSort(0, (int)arr.size() - 1, arr);
+    heapSort(arr);
     for (int i : arr) printf("%d ", i);
     printf("\n");
     printf("FIN\n");
