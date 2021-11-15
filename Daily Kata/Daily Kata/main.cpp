@@ -4,17 +4,14 @@
 
 using namespace std;
 
-// Time: O(n^2) Space: O(1)
-void insertionSort(vector<int> &arr) {
-    int N = (int)arr.size();
-    for (int j = 1; j < N; ++j) {
-        int key = arr[j];
-        int i = j - 1;
-        while (i >= 0 && arr[i] > key) {
-            arr[i + 1] = arr[i];
-            --i;
+// Time: O(n^2) | Space: O(1)
+void selectionSort(vector<int> &arr) {
+    for (int i = 0; i < arr.size() - 1; ++i) {
+        int minPtr = i;
+        for (int j = i + 1; j < arr.size(); ++j) {
+            if (arr[j] < arr[minPtr]) minPtr = j;
         }
-        arr[i + 1] = key;
+        swap(arr[i], arr[minPtr]);
     }
 }
 
@@ -23,7 +20,7 @@ int main() {
     for (int i : arr) printf("%d ", i);
     printf("\n");
     
-    insertionSort(arr);
+    selectionSort(arr);
     for (int i : arr) printf("%d ", i);
     printf("\n");
     printf("FIN\n");
