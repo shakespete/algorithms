@@ -4,14 +4,38 @@
 
 using namespace std;
 
-// Time: O(n^2) | Space: O(1)
-void selectionSort(vector<int> &arr) {
-    for (int i = 0; i < arr.size() - 1; ++i) {
-        int minPtr = i;
-        for (int j = i + 1; j < arr.size(); ++j) {
-            if (arr[j] < arr[minPtr]) minPtr = j;
-        }
-        swap(arr[i], arr[minPtr]);
+void maxHeapify(int i, vector<int> &arr, int heapSize) {
+    int l = 2 * i + 1;
+    int r = 2 * i + 2;
+    
+    int largest;
+    if (l < heapSize && arr[l] > arr[i]) largest = l;
+    else largest = i;
+    
+    if (r < heapSize && arr[r] > arr[largest]) largest = r;
+    
+    if (largest != i) {
+        swap(arr[i], arr[largest]);
+        maxHeapify(largest, arr, heapSize);
+    }
+}
+
+void buildMaxHeap(vector<int> &arr) {
+    int heapSize = (int)arr.size();
+    int parentIdx = heapSize / 2 - 1;
+    for (int i = parentIdx; i >= 0; --i)
+        maxHeapify(i, arr, heapSize);
+}
+
+// Time: O(nlog(n)) | Space: O(1)
+void heapSort(vector<int> &arr) {
+    buildMaxHeap(arr);
+    int heapSize = (int)arr.size();
+    
+    for (int i = heapSize - 1; i > 0; --i) {
+        swap(arr[0], arr[i]);
+        heapSize--;
+        maxHeapify(0, arr, heapSize);
     }
 }
 
@@ -20,7 +44,7 @@ int main() {
     for (int i : arr) printf("%d ", i);
     printf("\n");
     
-    selectionSort(arr);
+    heapSort(arr);
     for (int i : arr) printf("%d ", i);
     printf("\n");
     printf("FIN\n");
