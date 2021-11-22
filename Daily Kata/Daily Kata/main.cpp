@@ -4,24 +4,45 @@
 
 using namespace std;
 
-void insertionSort(vector<int> &arr) {
-    int N = (int)arr.size();
-    for (int j = 1; j < N; ++j) {
-        int key = arr[j];
-        int i = j - 1;
-        while (i >= 0 && arr[i] > key) {
-            arr[i + 1] = arr[i];
-            --i;
-        }
-        arr[i + 1] = key;
+void maxHeapify(int i, vector<int>& vec, int heapSize) {
+    int l = 2 * i + 1;
+    int r = 2 * i + 2;
+    
+    int largest;
+    if (l < heapSize && vec[l] > vec[i]) largest = l;
+    else largest = i;
+    
+    if (r < heapSize && vec[r] > vec[largest]) largest = r;
+    
+    if (largest != i) {
+        swap(vec[i], vec[largest]);
+        maxHeapify(largest, vec, heapSize);
     }
+}
+
+void buildMaxHeap(vector<int>& vec) {
+    int heapSize = (int)vec.size();
+    int parent = heapSize / 2 - 1;
+    for (int i = parent; i >= 0; --i)
+        maxHeapify(i, vec, heapSize);
+}
+
+void heapSort(vector<int>& vec) {
+    buildMaxHeap(vec);
+    int heapSize = (int)vec.size();
+    for (int i = heapSize - 1; i > 0; --i) {
+        swap(vec[0], vec[i]);
+        heapSize--;
+        maxHeapify(0, vec, heapSize);
+    }
+    
 }
 
 int main() {
     vector<int> arr = { 4, 1, 3, 2, 16, 9, 10, 14, 8, 7 };
     for (int i : arr) printf("%d ", i);
     printf("\n");
-    insertionSort(arr);
+    heapSort(arr);
     for (int i : arr) printf("%d ", i);
     printf("\nFIN\n");
     
