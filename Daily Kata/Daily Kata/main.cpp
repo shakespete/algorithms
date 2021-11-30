@@ -4,39 +4,34 @@
 
 using namespace std;
 
-void merge(int p, int q, int r, vector<int>& A) {
-    int i, j, k;
+void maxHeapify(int i, vector<int>& vec, int heapSize) {
+    int l = 2 * i + 1;
+    int r = 2 * i + 2;
     
-    int n1 = q - p + 1;
-    int n2 = r - q;
+    int largest = i;
+    if (l < heapSize && vec[l] > vec[largest]) largest = l;
+    if (r < heapSize && vec[r] > vec[largest]) largest = r;
     
-    int* L = new int[n1 + 1];
-    int* R = new int[n2 + 1];
-    
-    for (i = 1; i <= n1; ++i) L[i] = A[i + p - 1];
-    for (j = 1; j <= n2; ++j) R[j] = A[j + q];
-    
-    L[n1 + 1] = INT_MAX;
-    R[n2 + 1] = INT_MAX;
-    
-    i = j = 1;
-    for (k = p; k <= r; ++k) {
-        if (L[i] <= R[j]) {
-            A[k] = L[i];
-            ++i;
-        } else {
-            A[k] = R[j];
-            ++j;
-        }
+    if (largest != i) {
+        swap(vec[i], vec[largest]);
+        maxHeapify(largest, vec, heapSize);
     }
 }
 
-void mergeSort(int p, int r, vector<int>& A) {
-    if (p < r) {
-        int q = (p + r) / 2;
-        mergeSort(p, q, A);
-        mergeSort(q + 1, r, A);
-        merge(p, q, r, A);
+void buildMaxHeap(vector<int>& vec) {
+    int heapSize = (int)vec.size();
+    int parent = heapSize / 2 - 1;
+    for (int i = parent; i >= 0; --i)
+        maxHeapify(i, vec, heapSize);
+}
+
+void heapSort(vector<int>& vec) {
+    buildMaxHeap(vec);
+    int heapSize = (int)vec.size();
+    for (int i = heapSize - 1; i > 0; --i) {
+        swap(vec[0], vec[i]);
+        heapSize--;
+        maxHeapify(0, vec, heapSize);
     }
 }
 
@@ -45,7 +40,7 @@ int main() {
     for (int i : arr) printf("%d ", i);
     printf("\n");
     
-    mergeSort(0, (int)arr.size() - 1, arr);
+    heapSort(arr);
     for (int i : arr) printf("%d ", i);
     printf("\nFIN\n");
     
