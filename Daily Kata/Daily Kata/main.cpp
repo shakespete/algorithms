@@ -4,35 +4,27 @@
 
 using namespace std;
 
-void maxHeapify(int i, vector<int>& arr, int heapSize) {
-    int l = i * 2 + 1;
-    int r = i * 2 + 2;
-    
-    int largest = i;
-    if (l < heapSize && arr[l] > arr[largest]) largest = l;
-    if (r < heapSize && arr[r] > arr[largest]) largest = r;
-    
-    if (largest != i) {
-        swap(arr[i], arr[largest]);
-        maxHeapify(largest, arr, heapSize);
+void selectionSort(vector<int>& arr) {
+    int N = (int)arr.size();
+    for (int i = 0; i < N - 1; ++i) {
+        int minPtr = i;
+        for (int j = i + 1; j < N; ++j) {
+            if (arr[j] < arr[minPtr]) minPtr = j;
+        }
+        swap(arr[i], arr[minPtr]);
     }
 }
 
-void buildMaxHeap(vector<int>& arr) {
-    int heapSize = (int)arr.size();
-    int parent = heapSize / 2 - 1;
-    for (int i = parent; i >= 0; --i)
-        maxHeapify(i, arr, heapSize);
-}
-
-void heapSort(vector<int>& arr) {
-    buildMaxHeap(arr);
-    int heapSize = (int)arr.size();
-    
-    for (int i = heapSize - 1; i > 0; --i) {
-        swap(arr[0], arr[i]);
-        heapSize--;
-        maxHeapify(0, arr, heapSize);
+void insertionSort(vector<int>& arr) {
+    int N = (int)arr.size();
+    for (int j = 1; j < N; ++j) {
+        int key = arr[j];
+        int i = j - 1;
+        while (i >= 0 && arr[i] < key) {
+            arr[i + 1] = arr[i];
+            --i;
+        }
+        arr[i + 1] = key;
     }
 }
 
@@ -41,7 +33,10 @@ int main() {
     for (int i : arr) printf("%d ", i);
     printf("\n");
     
-    heapSort(arr);
+    selectionSort(arr);
+    for (int i : arr) printf("%d ", i);
+    printf("\n");
+    insertionSort(arr);
     for (int i : arr) printf("%d ", i);
     printf("\nFIN\n");
     
