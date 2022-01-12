@@ -4,39 +4,22 @@
 
 using namespace std;
 
-void merge(int p, int q, int r, vector<int>& A) {
-    int i, j;
+int partition(int start, int end, vector<int>& A) {
+    int pivot = A[end];
+    int x = start - 1;
+    for (int i = start; i <= end; ++i)
+        if (A[i] < pivot)
+            swap(A[++x], A[i]);
     
-    int n1 = q - p + 1;
-    int n2 = r - q;
-    
-    int* L = new int[n1 + 1];
-    int* R = new int[n2 + 1];
-    
-    for (i = 1; i <= n1; ++i) L[i] = A[i + p - 1];
-    for (j = 1; j <= n2; ++j) R[j] = A[j + q];
-    
-    L[n1 + 1] = INT_MAX;
-    R[n2 + 1] = INT_MAX;
-    
-    i = j = 1;
-    for (int k = p; k <= r; ++k) {
-        if (L[i] <= R[j]) {
-            A[k] = L[i];
-            ++i;
-        } else {
-            A[k] = R[j];
-            ++j;
-        }
-    }
+    swap(A[++x], A[end]);
+    return x;
 }
 
-void mergeSort(int p, int r, vector<int>& A) {
-    if (p < r) {
-        int q = (p + r) / 2;
-        mergeSort(p, q, A);
-        mergeSort(q + 1, r, A);
-        merge(p, q, r, A);
+void quickSort(int start, int end, vector<int>& A) {
+    if (start < end) {
+        int p = partition(start, end, A);
+        quickSort(start, p - 1, A);
+        quickSort(p + 1, end, A);
     }
 }
 
@@ -45,7 +28,7 @@ int main() {
     for (int i : arr) printf("%d ", i);
     printf("\n");
     
-    mergeSort(0, (int)arr.size() - 1, arr);
+    quickSort(0, (int)arr.size() - 1, arr);
     for (int i : arr) printf("%d ", i);
     
     printf("\nFIN\n");
