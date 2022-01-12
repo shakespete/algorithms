@@ -4,22 +4,24 @@
 
 using namespace std;
 
-int partition(int start, int end, vector<int>& A) {
-    int pivot = A[end];
-    int x = start - 1;
-    for (int i = start; i <= end; ++i)
-        if (A[i] < pivot)
-            swap(A[++x], A[i]);
-    
-    swap(A[++x], A[end]);
-    return x;
+void insertionSort(vector<int>& arr) {
+    for (int j = 1; j < arr.size(); ++j) {
+        int key = arr[j];
+        int i = j - 1;
+        while (i >= 0 && arr[i] < key) {
+            arr[i + 1] = arr[i];
+            --i;
+        }
+        arr[i + 1] = key;
+    }
 }
 
-void quickSort(int start, int end, vector<int>& A) {
-    if (start < end) {
-        int p = partition(start, end, A);
-        quickSort(start, p - 1, A);
-        quickSort(p + 1, end, A);
+void selectionSort(vector<int>& arr) {
+    for (int i = 0; i < arr.size() - 1; ++i) {
+        int minPtr = i;
+        for (int j = i + 1; j < arr.size(); ++j)
+            if (arr[j] < arr[minPtr]) minPtr = j;
+        swap(arr[i], arr[minPtr]);
     }
 }
 
@@ -28,7 +30,10 @@ int main() {
     for (int i : arr) printf("%d ", i);
     printf("\n");
     
-    quickSort(0, (int)arr.size() - 1, arr);
+    selectionSort(arr);
+    for (int i : arr) printf("%d ", i);
+    printf("\n");
+    insertionSort(arr);
     for (int i : arr) printf("%d ", i);
     
     printf("\nFIN\n");
