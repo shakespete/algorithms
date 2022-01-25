@@ -4,20 +4,43 @@
 
 using namespace std;
 
-void bubbleSort(vector<int>& vec) {
-    int N = (int)vec.size();
-    for (int i = 0; i < N; ++i)
-        for (int j = 0; j < N - i; ++j)
-            if (vec[j] > vec[j + 1])
-                swap(vec[j], vec[j + 1]);
+void insertionSort(vector<int>& arr) {
+    int N = (int)arr.size();
     
+    for (int j = 1; j < N; ++j) {
+        int key = arr[j];
+        int i = j - 1;
+        
+        while (i >= 0 && arr[i] < key) {
+            arr[i + 1] = arr[i];
+            --i;
+        }
+        arr[i + 1] = key;
+    }
 }
+
+void selectionSort(vector<int>& arr) {
+    int N = (int)arr.size();
+    
+    for (int i = 0; i < N - 1; ++i) {
+        int minPtr = i;
+        for (int j = i + 1; j < N; ++j)
+            if (arr[j] < arr[minPtr])
+                minPtr = j;
+        
+        swap(arr[i], arr[minPtr]);
+    }
+}
+
 int main() {
-    vector<int> arr = { 21, 4, 1, 3, 2, 16, 9, 10, 14, 8, 7 };
+    vector<int> arr = { 4, 21, 1, 3, 2, 16, 9, 10, 14, 8, 7 };
     for (int i : arr) printf("%d ", i);
     printf("\n");
     
-    bubbleSort(arr);
+    insertionSort(arr);
+    for (int i : arr) printf("%d ", i);
+    printf("\n");
+    selectionSort(arr);
     for (int i : arr) printf("%d ", i);
     
     printf("\nFIN\n");
