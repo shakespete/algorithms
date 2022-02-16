@@ -4,12 +4,23 @@
 
 using namespace std;
 
-void bubbleSort(vector<int>& arr) {
-    int N = (int)arr.size();
-    for (int i = 0; i < N; ++i)
-        for (int j = 0; j < N - i; ++j)
-            if (arr[j] > arr[j + 1])
-                swap(arr[j], arr[j + 1]);
+int partition(int start, int end, vector<int>& arr) {
+    int pivot = arr[end];
+    int x = start - 1;
+    for (int i = start; i <= end; ++i)
+        if (arr[i] < pivot)
+            swap(arr[++x], arr[i]);
+    
+    swap(arr[++x], arr[end]);
+    return x;
+}
+
+void quickSort(int start, int end, vector<int>& arr) {
+    if (start < end) {
+        int p = partition(start, end, arr);
+        quickSort(start, p - 1, arr);
+        quickSort(p + 1, end, arr);
+    }
 }
 
 int main() {
@@ -17,7 +28,7 @@ int main() {
     for (auto& i : arr) cout << i << " ";
         
     cout << "\n";
-    bubbleSort(arr);
+    quickSort(0, (int)arr.size(), arr);
     for (auto& i : arr) cout << i << " ";
     
     printf("\nFIN\n");
