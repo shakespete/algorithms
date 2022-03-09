@@ -4,39 +4,21 @@
 
 using namespace std;
 
-void merge(int p, int q, int r, vector<int>& arr) {
-    int i, j;
-    
-    int n1 = q - p + 1;
-    int n2 = r - q;
-    
-    int* L = new int[n1 + 1];
-    int* R = new int[n2 + 1];
-    
-    for (i = 1; i <= n1; ++i) L[i] = arr[i + p - 1];
-    for (j = 1; j <= n2; ++j) R[j] = arr[j + q];
-    
-    L[n1 + 1] = INT_MAX;
-    R[n2 + 1] = INT_MAX;
-    
-    i = j = 1;
-    for (int k = p; k <= r; ++k) {
-        if (L[i] <= R[j]) {
-            arr[k] = L[i];
-            ++i;
-        } else {
-            arr[k] = R[j];
-            ++j;
-        }
-    }
+int partition(int start, int end, vector<int>& arr) {
+    int pivot = arr[end];
+    int x = start - 1;
+    for (int i = start; i <= end; ++i)
+        if (arr[i] < pivot)
+            swap(arr[++x], arr[i]);
+    swap(arr[++x], arr[end]);
+    return x;
 }
 
-void merge_sort(int p, int r, vector<int>& arr) {
-    if (p < r) {
-        int q = (p + r) / 2;
-        merge_sort(p, q, arr);
-        merge_sort(q + 1, r, arr);
-        merge(p, q, r, arr);
+void quick_sort(int start, int end, vector<int>& arr) {
+    if (start < end) {
+        int p = partition(start, end, arr);
+        quick_sort(start, p - 1, arr);
+        quick_sort(p + 1, end, arr);
     }
 }
 
@@ -46,7 +28,7 @@ int main() {
     for (auto& i : arr) cout << i << " ";
     
     cout << "\n";
-    merge_sort(0, (int)arr.size() - 1, arr);
+    quick_sort(0, (int)arr.size() - 1, arr);
     for (auto& i : arr) cout << i << " ";
     cout << "\n";
     
