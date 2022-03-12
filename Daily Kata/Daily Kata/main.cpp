@@ -4,15 +4,14 @@
 
 using namespace std;
 
-void insertion_sort(vector<int>& arr) {
-    for (int j = 1; j < (int)arr.size(); ++j) {
-        int key = arr[j];
-        int i = j - 1;
-        while (i >= 0 && arr[i] > key) {
-            arr[i + 1] = arr[i];
-            --i;
+void selection_sort(vector<int>& arr) {
+    int N = (int)arr.size();
+    for (int i = 0; i < N - 1; ++i) {
+        int minPtr = i;
+        for (int j = i + 1; j < N; ++j) {
+            if (arr[j] < arr[minPtr]) minPtr = j;
         }
-        arr[i + 1] = key;
+        swap(arr[i], arr[minPtr]);
     }
 }
 
@@ -22,7 +21,7 @@ int main() {
     for (auto& i : arr) cout << i << " ";
     
     cout << "\n";
-    insertion_sort(arr);
+    selection_sort(arr);
     for (auto& i : arr) cout << i << " ";
     cout << "\n";
     
