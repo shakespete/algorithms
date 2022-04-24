@@ -4,40 +4,40 @@
 
 using namespace std;
 
-void merge(int p, int q, int r, vector<int>& arr) {
-    int i, j;
-    int n1 = q - p + 1;
-    int n2 = r - q;
+
+void maxHeapify(int i, vector<int>& arr, int heapSize) {
+    int l = 2 * i + 1;
+    int r = 2 * i + 2;
     
-    int* L = new int[n1 + 1];
-    int* R = new int[n2 + 1];
+    int largest = i;
+    if (l < heapSize && arr[l] > arr[largest]) largest = l;
+    if (r < heapSize && arr[r] > arr[largest]) largest = r;
     
-    for (i = 1; i <= n1; ++i) L[i] = arr[i + p - 1];
-    for (j = 1; j <= n2; ++j) R[j] = arr[j + q];
-    
-    L[n1 + 1] = INT_MAX;
-    R[n2 + 1] = INT_MAX;
-    
-    i = j = 1;
-    for (int k = p; k <= r; ++k) {
-        if (L[i] <= R[j]) {
-            arr[k] = L[i];
-            ++i;
-        } else {
-            arr[k] = R[j];
-            ++j;
-        }
+    if (largest != i) {
+        swap(arr[largest], arr[i]);
+        maxHeapify(largest, arr, heapSize);
     }
 }
 
-void merge_sort(int p, int r, vector<int>& arr) {
-    if (p < r) {
-        int q = (p + r) / 2;
-        merge_sort(p, q, arr);
-        merge_sort(q + 1, r, arr);
-        merge(p, q, r, arr);
+void buildMaxHeap(vector<int>& arr) {
+    int heapSize = (int)arr.size();
+    int parent = heapSize / 2 - 1;
+    for (int i = parent; i >= 0; --i)
+        maxHeapify(i, arr, heapSize);
+}
+
+
+void heap_sort(vector<int>& arr) {
+    buildMaxHeap(arr);
+    int heapSize = (int)arr.size();
+    
+    for (int i = heapSize - 1; i > 0; --i) {
+        swap(arr[0], arr[i]);
+        heapSize--;
+        maxHeapify(0, arr, heapSize);
     }
 }
+
 
 int main() {
     vector<int> arr{ 39, 3, 7, 11, 2, 17, 7, 1, 5, 21, 8 };
@@ -45,7 +45,7 @@ int main() {
     for (auto& i : arr) cout << i << " ";
     
     cout << "\n";
-    merge_sort(0, (int)arr.size() - 1, arr);
+    heap_sort(arr);
     for (auto& i : arr) cout << i << " ";
     cout << "\n";
     
