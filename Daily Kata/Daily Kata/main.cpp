@@ -4,34 +4,13 @@
 
 using namespace std;
 
-void maxHeapify(int i, vector<int>& arr, int heapSize) {
-    int l = 2 * i + 1;
-    int r = 2 * i + 2;
-    
-    int largest = i;
-    if (l < heapSize && arr[l] > arr[largest]) largest = l;
-    if (r < heapSize && arr[r] > arr[largest]) largest = r;
-    
-    if (largest != i) {
-        swap(arr[largest], arr[i]);
-        maxHeapify(largest, arr, heapSize);
-    }
-}
-
-void buildMaxHeap(vector<int>& arr) {
-    int heapSize = (int)arr.size();
-    int parent = heapSize / 2 - 1;
-    for (int i = parent; i >= 0; --i)
-        maxHeapify(i, arr, heapSize);
-}
-
-void heap_sort(vector<int>& arr) {
-    buildMaxHeap(arr);
-    int heapSize = (int)arr.size();
-    for (int i = heapSize - 1; i > 0; --i) {
-        swap(arr[0], arr[i]);
-        heapSize--;
-        maxHeapify(0, arr, heapSize);
+void selection_sort(vector<int>& arr) {
+    int N = (int)arr.size();
+    for (int i = 0; i < N - 1; ++i) {
+        int minPtr = i;
+        for (int j = i + 1; j < N; ++j)
+            if (arr[j] < arr[minPtr]) minPtr = j;
+        swap(arr[i], arr[minPtr]);
     }
 }
 
@@ -41,7 +20,7 @@ int main() {
     for (auto& i : arr) cout << i << " ";
     
     cout << "\n";
-    heap_sort(arr);
+    selection_sort(arr);
     for (auto& i : arr) cout << i << " ";
     cout << "\n";
     
