@@ -4,26 +4,39 @@
 
 using namespace std;
 
-void selection_sort(vector<int>& arr) {
-    int N = (int)arr.size();
-    for (int i = 0; i < N - 1; ++i) {
-        int minPtr = i;
-        for (int j = i + 1; j < N; ++j)
-            if (arr[j] < arr[minPtr]) minPtr = j;
-        swap(arr[i], arr[minPtr]);
+void merge(int p, int q, int r, vector<int>& arr) {
+    int i, j;
+    
+    int n1 = q - p + 1;
+    int n2 = r - q;
+    
+    int* L = new int[n1 + 1];
+    int* R = new int[n2 + 1];
+    
+    for (int i = 1; i <= n1; ++i) L[i] = arr[i + p - 1];
+    for (int j = 1; j <= n2; ++j) R[j] = arr[j + q];
+    
+    L[n1 + 1] = INT_MAX;
+    R[n2 + 1] = INT_MAX;
+    
+    i = j = 1;
+    for (int k = p; k <= r; ++k) {
+        if (L[i] <= R[j]) {
+            arr[k] = L[i];
+            ++i;
+        } else {
+            arr[k] = R[j];
+            ++j;
+        }
     }
 }
 
-void insertion_sort(vector<int>& arr) {
-    int N = (int)arr.size();
-    for (int j = 1; j < N; ++j) {
-        int key = arr[j];
-        int i = j - 1;
-        while (i >= 0 && arr[i] > key) {
-            arr[i + 1] = arr[i];
-            --i;
-        }
-        arr[i + 1] = key;
+void merge_sort(int p, int r, vector<int>& arr) {
+    if (p < r) {
+        int q = (p + r) / 2;
+        merge_sort(p, q, arr);
+        merge_sort(q + 1, r, arr);
+        merge(p, q, r, arr);
     }
 }
 
@@ -33,7 +46,7 @@ int main() {
     for (auto& i : arr) cout << i << " ";
     
     cout << "\n";
-    insertion_sort(arr);
+    merge_sort(0, (int)arr.size() - 1, arr);
     for (auto& i : arr) cout << i << " ";
     cout << "\n";
     
