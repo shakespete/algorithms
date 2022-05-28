@@ -4,14 +4,21 @@
 
 using namespace std;
 
-void selectionSort(vector<int>& arr) {
-    int N = (int)arr.size();
-    for (int i = 0; i < N - 1; ++i) {
-        int minPtr = i;
-        for (int j = i + 1; j < N; ++j) {
-            if (arr[j] < arr[minPtr]) minPtr = j;
-        }
-        swap(arr[i], arr[minPtr]);
+int partition(int start, int end, vector<int>& arr) {
+    int pivot = arr[end];
+    int x = start - 1;
+    for (int i = start; i <= end; ++i)
+        if (arr[i] < pivot)
+            swap(arr[++x], arr[i]);
+    swap(arr[++x], arr[end]);
+    return x;
+}
+
+void quickSort(int start, int end, vector<int>& arr) {
+    if (start < end) {
+        int p = partition(start, end, arr);
+        quickSort(start, p - 1, arr);
+        quickSort(p + 1, end, arr);
     }
 }
 
@@ -21,7 +28,7 @@ int main() {
     for (auto& i : arr) cout << i << " ";
     
     cout << "\n";
-    selectionSort(arr);
+    quickSort(0, (int)arr.size() - 1, arr);
     for (auto& i : arr) cout << i << " ";
     cout << "\n";
     
