@@ -4,15 +4,12 @@
 
 using namespace std;
 
-void selectionSort(vector<int>& arr) {
+void bubbleSort(vector<int>& arr) {
     int N = (int)arr.size();
-    for (int i = 0; i < N - 1; ++i) {
-        int minPtr = i;
-        for (int j = i + 1; j < N; ++j)
-            if (arr[j] < arr[minPtr])
-                minPtr = j;
-        swap(arr[minPtr], arr[i]);
-    }
+    for (int i = 1; i < N; ++i)
+        for (int j = 0; j < N - i; ++j)
+            if (arr[j] > arr[j + 1])
+                swap(arr[j], arr[j + 1]);
 }
 
 int main() {
@@ -21,7 +18,7 @@ int main() {
     for (auto& i : arr) cout << i << " ";
     
     cout << "\n";
-    selectionSort(arr);
+    bubbleSort(arr);
     for (auto& i : arr) cout << i << " ";
     cout << "\n";
     
