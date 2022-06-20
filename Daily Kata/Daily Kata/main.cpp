@@ -4,25 +4,37 @@
 
 using namespace std;
 
-void bubbleSort(vector<int>& arr) {
-    int N = (int)arr.size();
-    for (int i = 1; i < N; ++i)
-        for (int j = 0; j < N - i; ++j)
-            if (arr[j] > arr[j + 1])
-                swap(arr[j], arr[j + 1]);
+int partition(int start, int end, vector<int>& arr) {
+    int pivot = arr[end];
+    int x = start - 1;
+    for (int i = start; i <= end; ++i)
+        if (arr[i] < pivot)
+            swap(arr[++x], arr[i]);
+    swap(arr[++x], arr[end]);
+    return x;
 }
 
-void insertionSort(vector<int>& arr) {
+void quickSelect(int start, int end, vector<int>& arr, int i) {
+    int p = partition(start, end, arr);
+    cout << "i: " << i << "\n";
+    cout << "p: " << p << "\n";
+    
+    for (auto& e : arr) cout << e << " ";
+    
+    cout << "\n";
+    
+    if (i == p) return;
+    
+    if (i > p) quickSelect(p + 1, end, arr, i);
+    else quickSelect(start, p - 1, arr, i);
+}
+
+int kthLargest(vector<int>& arr, int k) {
     int N = (int)arr.size();
-    for (int j = 1; j < N; ++j) {
-        int key = arr[j];
-        int i = j - 1;
-        while (i >= 0 && arr[i] > key) {
-            arr[i + 1] = arr[i];
-            --i;
-        }
-        arr[i + 1] = key;
-    }
+    int kthSmallest = N - k;
+    
+    quickSelect(0, N - 1, arr, kthSmallest);
+    return arr[kthSmallest];
 }
 
 int main() {
@@ -31,8 +43,8 @@ int main() {
     for (auto& i : arr) cout << i << " ";
     
     cout << "\n";
-    insertionSort(arr);
-    for (auto& i : arr) cout << i << " ";
+    cout << kthLargest(arr, 3);
+//    for (auto& i : arr) cout << i << " ";
     cout << "\n";
     
     printf("FIN\n");
