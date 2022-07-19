@@ -4,16 +4,21 @@
 
 using namespace std;
 
-void insertionSort(vector<int>& arr) {
-    int N = (int)arr.size();
-    for (int j = 1; j < N; ++j) {
-        int key = arr[j];
-        int i = j - 1;
-        while (i >= 0 && key < arr[i]) {
-            arr[i + 1] = arr[i];
-            --i;
-        }
-        arr[i + 1] = key;
+int partition(int start, int end, vector<int>& arr) {
+    int pivot = arr[end];
+    int x = start - 1;
+    for (int i = start; i < end; ++i)
+        if (arr[i] < pivot)
+            swap(arr[++x], arr[i]);
+    swap(arr[++x], arr[end]);
+    return x;
+}
+
+void quickSort(int start, int end, vector<int>& arr) {
+    if (start < end) {
+        int p = partition(start, end, arr);
+        quickSort(start, p - 1, arr);
+        quickSort(p + 1, end, arr);
     }
 }
 
@@ -23,7 +28,7 @@ int main() {
     for (auto& i : arr) cout << i << " ";
     cout << "\n";
     
-    insertionSort(arr);
+    quickSort(0, (int)arr.size() - 1, arr);
     for (auto& i : arr) cout << i << " ";
     cout << "\n";
     
