@@ -1,100 +1,80 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
+#include <string>
 #include <vector>
 
 using namespace std;
 
-class Queue {
-    enum { DEF_CAP = 2 };
-public:
-    Queue(int cap = DEF_CAP);
-    ~Queue();
-    bool empty() const;
-    void enq(int e);
-    int deq();
-private:
-    int *q;
-    int capacity;
-    int front;
-    int rear;
+struct Node {
+    bool isWord = false;
+    vector<Node*> children{vector<Node*>(26, NULL)};
 };
 
-Queue::Queue(int cap) : front(0), rear(0), capacity(cap), q(new int[cap]) { }
-Queue::~Queue() { while(!empty()) deq(); }
-bool Queue::empty() const { return front == rear; }
-void Queue::enq(int e) {
-    if (rear == capacity) {
-        int* temp = new int[capacity * 2];
-        for (int i = 0; i < capacity; ++i) temp[i] = q[i];
-        q = temp;
-        capacity *= 2;
+class Trie {
+public:
+    Trie();
+    void insert(string s);
+    void dfs(Node* cursor, string prefix, vector<string>& suggestions);
+    vector<string> autocomplete(string prefix);
+private:
+    Node* root;
+};
+
+Trie::Trie() { root = new Node(); }
+void Trie::insert(string s) {
+    Node* cursor = root;
+    for (auto& c : s) {
+        if (!cursor->children[c - 'a']) {
+            cursor->children[c - 'a'] = new Node();
+        }
+        cursor = cursor->children[c - 'a'];
     }
-    q[rear++] = e;
+    cursor->isWord = true;
 }
-int Queue::deq() {
-    if (!empty()) return q[front++];
-    return -1;
-}
-
-class Graph {
-public:
-    Graph(int e);
-    void addEdge(int v, int w);
-    void BFS(int start);
-private:
-    int V;
-    int** adjList;
-    int* visited;
-};
-
-Graph::Graph(int e) {
-    V = e;
-    adjList = new int*[e];
-    visited = new int[e];
-    for (int i = 0; i < e; ++i)
-        adjList[i] = new int[e]{0};
-}
-void Graph::addEdge(int v, int w) {
-    adjList[v][w] = 1;
-    adjList[w][v] = 1;
-}
-void Graph::BFS(int start) {
-    Queue* q = new Queue();
-    q->enq(start);
+void Trie::dfs(Node* cursor, string prefix, vector<string>& suggestions) {
+    if (cursor->isWord) suggestions.push_back(prefix);
     
-    while (!q->empty()) {
-        int u = q->deq();
-        visited[u] = 1;
-        cout << u << " ";
-        for (int i = 0; i < V; ++i) {
-            if (adjList[u][i] == 1) // If can reach i from u
-                if (visited[i] != 1) q->enq(i); // if i has not been visited yet
+    for (char c = 'a'; c <= 'z'; ++c) {
+        if (cursor->children[c - 'a']) {
+            prefix += c;
+            dfs(cursor->children[c - 'a'], prefix, suggestions);
+            prefix.pop_back(); // Backtrack
         }
     }
 }
+vector<string> Trie::autocomplete(string prefix) {
+    vector<string> suggestions;
+    
+    Node* cursor = root;
+    for (auto& c : prefix) {
+        if (!cursor->children[c - 'a']) return suggestions;
+        cursor = cursor->children[c - 'a'];
+    }
+    dfs(cursor, prefix, suggestions);
+    return suggestions;
+}
 
 int main() {
-    //    vector<int> arr{ 39, 3, 7, 11, 2, 17, 7, 1, 5, 21, 8 };
-    ////    1, 2, 3, 5, 7, 7, 8, 11, 17, 21, 39
-    //    for (auto& i : arr) cout << i << " ";
-    //    cout << "\n";
-    //
-    //    mergeSort(0, (int)arr.size() - 1, arr);
-    //    for (auto& i : arr) cout << i << " ";
-    //    cout << "\n";
+    Trie* trie = new Trie();
     
+    vector<string> words = {"mobile","mouse","moneypot","monitor","mousepad"};
+    for (auto& w : words) trie->insert(w);
     
-    Graph* g = new Graph(10);
-    g->addEdge(1, 2);
-    g->addEdge(1, 3);
-    g->addEdge(1, 5);
-    g->addEdge(3, 4);
-    g->addEdge(4, 7);
-    g->addEdge(5, 6);
-    g->addEdge(6, 8);
-    g->addEdge(6, 9);
-    g->addEdge(2, 0);
-    g->BFS(1);
+    cout << "Search 'm': ";
+    vector<string> results = trie->autocomplete("m");
+    for (auto& res : results) cout << res << " ";
+    cout << "\n";
+    
+    cout << "Search 'mon': ";
+    vector<string> results1 = trie->autocomplete("mon");
+    for (auto& res : results1) cout << res << " ";
+    cout << "\n";
+    
+    cout << "Search 'mou': ";
+    vector<string> results2 = trie->autocomplete("mou");
+    for (auto& res : results2) cout << res << " ";
+    cout << "\n";
+    
     cout << "\nFIN\n";
     return 0;
 }
