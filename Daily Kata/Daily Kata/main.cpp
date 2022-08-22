@@ -1,80 +1,37 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
-#include <string>
 #include <vector>
 
 using namespace std;
 
-struct Node {
-    bool isWord = false;
-    vector<Node*> children{vector<Node*>(26, NULL)};
-};
-
-class Trie {
-public:
-    Trie();
-    void insert(string s);
-    void dfs(Node* cursor, string prefix, vector<string>& suggestions);
-    vector<string> autocomplete(string prefix);
-private:
-    Node* root;
-};
-
-Trie::Trie() { root = new Node(); }
-void Trie::insert(string s) {
-    Node* cursor = root;
-    for (auto& c : s) {
-        if (!cursor->children[c - 'a']) {
-            cursor->children[c - 'a'] = new Node();
-        }
-        cursor = cursor->children[c - 'a'];
-    }
-    cursor->isWord = true;
-}
-void Trie::dfs(Node* cursor, string prefix, vector<string>& suggestions) {
-    if (cursor->isWord) suggestions.push_back(prefix);
+int partition(int start, int end, vector<int>& arr) {
+    int pivot = arr[end];
+    int x = start - 1;
+    for (int i = start; i <= end; ++i)
+        if (arr[i] < pivot)
+            swap(arr[i], arr[++x]);
     
-    for (char c = 'a'; c <= 'z'; ++c) {
-        if (cursor->children[c - 'a']) {
-            prefix += c;
-            dfs(cursor->children[c - 'a'], prefix, suggestions);
-            prefix.pop_back(); // Backtrack
-        }
-    }
+    swap(arr[end], arr[++x]);
+    return x;
 }
-vector<string> Trie::autocomplete(string prefix) {
-    vector<string> suggestions;
-    
-    Node* cursor = root;
-    for (auto& c : prefix) {
-        if (!cursor->children[c - 'a']) return suggestions;
-        cursor = cursor->children[c - 'a'];
+
+void quickSort(int start, int end, vector<int>& arr) {
+    if (start < end) {
+        int p = partition(start, end, arr);
+        quickSort(start, p - 1, arr);
+        quickSort(p + 1, end, arr);
     }
-    dfs(cursor, prefix, suggestions);
-    return suggestions;
 }
 
 int main() {
-    Trie* trie = new Trie();
-    
-    vector<string> words = {"mobile","mouse","moneypot","monitor","mousepad"};
-    for (auto& w : words) trie->insert(w);
-    
-    cout << "Search 'm': ";
-    vector<string> results = trie->autocomplete("m");
-    for (auto& res : results) cout << res << " ";
+    vector<int> arr{ 39, 3, 7, 11, 2, 17, 7, 1, 5, 21, 8 };
+    //    1, 2, 3, 5, 7, 7, 8, 11, 17, 21, 39
+    for (auto& i : arr) cout << i << " ";
     cout << "\n";
-    
-    cout << "Search 'mon': ";
-    vector<string> results1 = trie->autocomplete("mon");
-    for (auto& res : results1) cout << res << " ";
-    cout << "\n";
-    
-    cout << "Search 'mou': ";
-    vector<string> results2 = trie->autocomplete("mou");
-    for (auto& res : results2) cout << res << " ";
-    cout << "\n";
-    
+
+    quickSort(0, (int)arr.size() - 1, arr);
+    for (auto& i : arr) cout << i << " ";
+
     cout << "\nFIN\n";
     return 0;
 }
